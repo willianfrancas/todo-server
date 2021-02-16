@@ -4,12 +4,19 @@ const express = require('express');
 const User = require('./user');
 const cors = require('cors');
 
-var app = express();
+const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/tododb', { useNewUrlParser: true, useUnifiedTopology: true });
+const port = process.env.PORT || 7000;
+
+mongoose.connect(process.env.MONGO_URL,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+);
 
 const myLogger = (req, res, next) => {
     console.log(req.body);
@@ -38,4 +45,4 @@ app.post('/user', (req, res) => {
     });
 });
 
-app.listen(7000);
+app.listen(port);
