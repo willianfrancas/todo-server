@@ -4,6 +4,7 @@
   "description": "server to provide data to my-todo app",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "npm start"
   },
   "keywords": [
