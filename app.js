@@ -13,6 +13,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", 'https://my-todo-mongodb.herokuapp.com');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
+});
+
 const port = process.env.PORT || 7000;
 mongoose.connect(process.env.MONGO_URL,
     {
