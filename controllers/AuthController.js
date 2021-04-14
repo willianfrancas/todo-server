@@ -15,10 +15,10 @@ const AuthController = {
         delete newUser.password;
         res.status(200).json(newUser);
       } else {
-        res.status(403).json({ message: 'E-mail ja cadastrado!', error: {} });
+        res.status(403).json({ message: 'e-mail já cadastrado!', error: {} });
       }
     } catch (error) {
-      res.status(500).json({ message: 'Erro durante o cadastro!', error: error });
+      res.status(500).json({ message: 'erro durante o cadastro!', error: error });
     }
   },
 
@@ -27,29 +27,28 @@ const AuthController = {
     const password = req.body.password;
 
     UserModel.findOne({ email: email }).lean().exec(function (error, user) {
-      if (error) {
-        return res.status(500).json({ message: 'Erro no servidor', error: error })
+      if (error === null && user === null) {
+        return res.status(500).json({ message: 'e-mail não cadastrado.\n Utilize SIGNUP para se cadastrar', error: error });
       }
       const authError = (password == "" || password == null || !user);
       if (!authError && bcrypt.compareSync(password, user.password)) {
         let token = jwt.sign({ _id: user._id }, consts.jwtKey, { expiresIn: consts.jwtExpire });
         delete user.password;
-        
         return res.status(200).json({ ...user, token });
       }
-      return res.status(500).json({ message: 'Usuario: email ou senha incorreto', error: 'message' })
+      return res.status(500).json({ message: 'email ou senha incorretos', error })
     })
   },
 
   checkToken: function (req, res, next) {
     const token = req.get('Authorization');
     if (!token) {
-      return res.status(401).json({ message: 'Token não encontrado!' });
+      return res.status(401).json({ message: 'token não encontrado!' });
     }
     jwt.verify(token, consts.jwtKey,
       (error, decoded) => {
         if (error || !decoded) {
-          return res.status(401).json({ message: 'Token errado. Falha na autenticação' })
+          return res.status(401).json({ message: 'token errado. Falha na autenticação' })
         }
         next();
       })
@@ -63,7 +62,7 @@ const AuthController = {
 
         UserModel.findById(id).lean().exec(function (error, user) {
           if (error || !user) {
-            return res.status(500).json({ message: 'Erro ao tentar obter dados do usuário', error: error })
+            return res.status(500).json({ message: 'erro ao tentar obter os dados do usuário', error: error })
           }
           let token = jwt.sign({ _id: user._id }, consts.jwtKey, { expiresIn: consts.jwtExpire });
           delete user.password;
