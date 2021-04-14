@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+
 const consts = {
   bcryptSalts: 10,
-  jwtKey: 'wiXHN2PF3s2NuNakGL1eq5rVZ49P7vQe',
+  jwtKey: process.env.JWT_KEY,
   jwtExpire: 7200
 }
 
