@@ -25,7 +25,6 @@ const AuthController = {
   login: function (req, res) {
     const email = req.body.email;
     const password = req.body.password;
-
     UserModel.findOne({ email: email }).lean().exec(function (error, user) {
       if (error === null && user === null) {
         return res.status(500).json({ message: 'e-mail não cadastrado.\n Utilize SIGNUP para se cadastrar', error: error });
@@ -36,7 +35,7 @@ const AuthController = {
         delete user.password;
         return res.status(200).json({ ...user, token });
       }
-      return res.status(500).json({ message: 'email ou senha incorretos', error })
+      return res.status(500).json({ message: 'email ou senha incorretos', error });
     })
   },
 
@@ -69,7 +68,31 @@ const AuthController = {
           return res.status(200).json({ ...user, token });
         })
       })
-  }
+  },
+
+  saveUser: (req, res) => {
+    try {
+      const token = req.get('Authorization');
+      jwt.verify(token, consts.jwtKey,
+        (error, decoded) => {
+          const id = decoded._id;
+          UserModel.findByIdAndUpdate(id, {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            username: req.body.username,
+            mobilephone: req.body.mobilephone,
+          }).then(user => {
+            if (!user) {
+              return res.status(404).json({
+                message: 'Usuário não encontrado!'
+              });
+            }
+            res.status(200).json({ user, message: 'Usuário salvo com sucesso!' });
+          });
+        });
+    }
+    catch (error) { }
+  },
 }
 
 export default AuthController;
