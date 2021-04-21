@@ -7,6 +7,7 @@ router.post('/register', AuthController.register);
 
 router.use(AuthController.checkToken);
 router.get('/user', AuthController.userData);
+router.post('/user', AuthController.saveUser);
 
 export default router;
 // module.exports = router;
