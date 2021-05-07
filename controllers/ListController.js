@@ -1,9 +1,9 @@
-import List from '../models/ListModel.js';
 import ListModel from '../models/ListModel.js';
 
 const ListController = {
-  loadItems: async (req, res) => {
-    ListModel.find().exec((error, items) => {
+  loadItems: async function (req, res) {
+    const owner = req.params.owner;
+    ListModel.find({ owner: owner }).exec((error, items) => {
       if (error) {
         return res.status(500).json({ message: '...problemas ao carregar os items!' });
       }
@@ -22,7 +22,6 @@ const ListController = {
   },
 
   updateItem: (req, res) => {
-    console.log(req.body._id);
     try {
       ListModel.findByIdAndUpdate(req.body._id, {
         done: req.body.done,
