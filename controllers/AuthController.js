@@ -87,7 +87,7 @@ const AuthController = {
                 message: 'Usuário não encontrado!'
               });
             }
-            res.status(200).json({ user, message: 'Usuário salvo com sucesso!' });
+            res.status(200).json({ ...user, message: 'Usuário salvo com sucesso!' });
           });
         });
     }
