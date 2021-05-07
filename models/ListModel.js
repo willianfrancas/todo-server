@@ -6,6 +6,7 @@ const ListSchema = new Schema({
   description: String,
   price: Number,
   id: String,
+  owner: String,
 });
 
 const List = mongoose.model('List', ListSchema);
